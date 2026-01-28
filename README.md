@@ -107,3 +107,23 @@ Project101/
 ```bash
 git clone https://github.com/OM-INGH-81/ai-face-attendance-system.git
 cd ai-face-attendance-system
+
+2️⃣ Create Virtual Environment
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
+3️⃣ Install Dependencies
+
+pip install -r requirements.txt
+
+4️⃣ Run Migrations
+
+python manage.py migrate
+
+5️⃣ Create Superuser
+
+python manage.py createsuperuser
+
+6️⃣ Start Server
+
+python manage.py runserver
