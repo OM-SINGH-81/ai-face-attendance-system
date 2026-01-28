@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/png" href="{% static 'app1/favicon.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Attendance</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg1: #050510;
+            --bg2: #0a0f2e;
+            --neon: #00f7ff;
+            --violet: #7b5cff;
+            --card: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.15);
+            --muted: #aab1ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER (MOBILE) ===== */
+        .topbar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #070c24;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar h2 {
+            color: var(--neon);
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+        }
+
+        .menu-btn {
+            font-size: 1.5rem;
+            color: var(--neon);
+            cursor: pointer;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #070c24, #040716);
+            border-right: 1px solid var(--border);
+            padding: 35px 25px;
+            position: fixed;
+            height: 100vh;
+            transition: .4s;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: var(--neon);
+            margin-bottom: 45px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 18px;
+            margin-bottom: 14px;
+            border-radius: 14px;
+            color: white;
+            text-decoration: none;
+            transition: .35s;
+        }
+
+        .sidebar a i {
+            font-size: 1.3rem;
+            color: var(--neon);
+        }
+
+        .sidebar a:hover {
+            transform: translateX(6px);
+            background: rgba(0, 247, 255, 0.08);
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            margin-left: 260px;
+            padding: 50px;
+        }
+
+        .header h1 {
+            
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            background: linear-gradient(90deg, var(--neon), var(--violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--muted);
+            max-width: 600px;
+        }
+
+        /* ===== GRID ===== */
+        .grid {
+            margin-top: 45px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            backdrop-filter: blur(12px);
+            transition: .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 35px rgba(0, 247, 255, .25);
+        }
+
+        .card a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .card i {
+            font-size: 2.6rem;
+            color: var(--neon);
+            margin-bottom: 12px;
+        }
+
+        .card span {
+            color: var(--muted);
+            font-size: .9rem;
+            letter-spacing: 1px;
+        }
+
+        .card h3 {
+            font-size: 2rem;
+            margin-top: 5px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        footer strong {
+            color: var(--neon);
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media(max-width:900px) {
+            .topbar {
+                display: flex;
+            }
+
+            .sidebar {
+                left: -100%;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MOBILE TOP BAR -->
+    <div class="topbar">
+        
+        <h2>AI CORE</h2>
+        <i class="fas fa-bars menu-btn" onclick="toggleMenu()"></i>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <h2>AI CORE</h2>
+    
+        <a href="{% url 'capture_student' %}">
+            <i class="fas fa-user-plus"></i> Register Student
+        </a>
+    
+        <a href="{% url 'student-list' %}">
+            <i class="fas fa-users"></i> Students
+        </a>
+    
+        <a href="{% url 'capture_and_recognize' %}">
+            <i class="fas fa-camera"></i> Live Attendance
+        </a>
+    
+        <a href="{% url 'student_attendance_list' %}">
+            <i class="fas fa-chart-line"></i> Attendance Logs
+        </a>
+    
+        <a href="{% url 'camera_config_list' %}">
+            <i class="fas fa-video"></i> Camera Control
+        </a>
+            <hr style="border-color:rgba(255,255,255,0.1); margin:25px 0;">
+            
+            {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" style="color:#ff6b6b; font-weight:600;">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" style="color:#00f7ff; font-weight:600;">
+                <i class="fas fa-right-to-bracket"></i> Login
+            </a>
+            {% endif %}
+
+    
+        <!-- STOP LIVE ATTENDANCE -->
+        <a href="{% url 'stop_live_attendance' %}" onclick="return confirmStop();" style="
+             margin-top:30px;
+             background:#ff3b3b;
+             color:white;
+             padding:15px;
+             border-radius:14px;
+             font-weight:700;
+             justify-content:center;
+             box-shadow:0 0 18px rgba(255,59,59,0.6);
+           ">
+            ⛔ STOP ATTENDANCE
+        </a>
+    </div>
+
+
+
+    <!-- MAIN -->
+    <div class="main">
+    <div class="header">
+        <h1>AI Attendance System</h1>    
+        <p>Real-time face recognition powered attendance dashboard</p>
+    </div>
+
+
+        <div class="grid">
+            <div class="card"><a href="{% url 'student-list' %}">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>STUDENTS</span>
+                    <h3>{{ total_students }}</h3>
+                </a></div>
+
+            <div class="card"><a href="{% url 'student_attendance_list' %}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>RECORDS</span>
+                    <h3>{{ total_attendance }}</h3>
+                </a></div>
+
+            <div class="card"><a href="{% url 'student_attendance_list' %}">
+                    <i class="fas fa-arrow-right-to-bracket"></i>
+                    <span>CHECK-INS</span>
+                    <h3>{{ total_check_ins }}</h3>
+                </a></div>
+
+            <div class="card"><a href="{% url 'student_attendance_list' %}">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                    <span>CHECK-OUTS</span>
+                    <h3>{{ total_check_outs }}</h3>
+                </a></div>
+
+            <div class="card"><a href="{% url 'camera_config_list' %}">
+                    <i class="fas fa-video"></i>
+                    <span>CAMERAS</span>
+                    <h3>{{ total_cameras }}</h3>
+                </a></div>
+        </div>
+
+        <footer>
+            <p>Built by <strong>Om Singh</strong> • AI System v1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+    </script>
+<script>
+    function confirmStop() {
+        return confirm("⚠️ Are you sure you want to STOP live attendance?\n\nAll cameras will close.");
+    }
+</script>
+
+</body>
+
+</html>
